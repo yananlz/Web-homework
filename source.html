@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title></title>
+	<meta charest="utf-8"/>
+	<link rel="stylesheet" type="text/css" href="js/sources.css" />
+	<!-- <script src="js/source2.js"></script> -->
+	<script src="js/animate.js"></script>
+	</head>
+	<body>
+		<div class="suona">
+			<img src="images/a15.png">
+			<span id="move">[温馨提示]：最近有不少不法分子在网上骗人，请大家注意安全!!!!</span>
+		</div>
+		<div class="box1" id="box1">
+			<div class="slides" id="slides">
+				<div class="slide"><img src="images/b5.png" alt=""></div>
+				<div class="slide"><img src="images/b1.png" alt=""></div>
+				<div class="slide"><img src="images/b2.png" alt=""></div>
+				<div class="slide"><img src="images/b3.png" alt=""></div>
+				<div class="slide"><img src="images/b4.png" alt=""></div>
+				<div class="slide"><img src="images/b5.png" alt=""></div>
+				<div class="slide"><img src="images/b1.png" alt=""></div>
+			</div>
+			<span id="left"><</span>
+			<span id="right">></span>
+			<ul class="nav" id="nav">
+				<li id="active">1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+			</ul>
+	</div>
+	</body>
+	<script>
+		var box1=document.getElementById("box1");
+		var oNavlist=document.getElementById("nav").children;
+		var slides=document.getElementById("slides");
+		var left=document.getElementById("left");
+		var right=document.getElementById("right");
+		var move=document.getElementById("move");
+		var a=1;
+		var isMoving=false;
+		//实现自动轮播
+		function next(){
+			if(!isMoving){
+				isMoving=true;
+				a++;
+				navChange();
+				animate(slides,{left:-1200*a},function(){
+					if(a>5){
+						slides.style.left="-1200px";//瞬间切换图片
+						a=1;
+					}
+					isMoving=false;
+
+				});
+
+			}
+		}
+		//实现轮播效果
+		function prev(){
+			if(!isMoving){
+				isMoving=true;
+				a--;
+				navChange();
+				animate(slides,{left:-1200*a},function(){
+				if(a===0){
+					slides.style.left="-6000px";//瞬间切换图片
+					a=5;
+				}
+				isMoving=false;
+			});
+
+			}
+		}
+		var timer=setInterval(next,2000);
+		//鼠标划入清空定时器
+		box1.onmouseover=function(){
+			animate(left,{opacity:50});
+			animate(right,{opacity:50});
+			clearInterval(timer);
+			//clearInterval(move);
+		}
+		//鼠标划出设置定时器
+		box1.onmouseout=function(){
+			animate(left,{opacity:0});
+			animate(right,{opacity:0});
+			timer=setInterval(next,3000);
+			//move=setInterval(next,3000);
+		}
+		//左右箭头实现的效果
+		right.onclick=next;
+		left.onclick=prev;
+
+		//实现点击哪个li显示哪个图片的效果
+		for(var i=0;i<oNavlist.length;i++){
+			oNavlist[i].index=i;//为每个li添加属性
+			// a=this.idx+1;
+			// navChange();
+			oNavlist[i].onclick=function(){
+				a = this.index+1;
+				navChange();
+				animate(slides,{left:-1200*a});
+			}
+		}
+		//实现按钮背景色改变效果
+		function navChange(){
+			for(var c=0;c<oNavlist.length;c++){
+				oNavlist[c].id="";
+			}
+			if(a===6){
+				oNavlist[0].id="active";
+			}
+			else if(a===0){
+				oNavlist[4].id="active";
+			}
+			else{
+				oNavlist[a-1].id="active";
+			}
+		}
+		window.onload=function(){
+			setInterval(function(){
+					var time=parseInt(getStyle(move,"right"));
+					if(move.style.right=="800px"){
+						//animate(move,{opacity:0});
+						move.style.right=-400+"px";
+					}
+					else{
+						move.style.right=time+4+"px";
+					}
+			},10);
+		}
+	</script>
+	</html>
